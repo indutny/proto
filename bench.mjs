@@ -20,10 +20,43 @@ const MESSAGE_SPEC = [
   FIELD_STRING, // 5 - headers
 ];
 
+function decode(buf) {
+  const fields = parse(buf, MESSAGE_SPEC);
+
+  const res = {
+    verb: null,
+    path: null,
+    body: null,
+    id: null,
+    headers: [],
+  };
+
+  for (const { field, value } of fields) {
+    switch (field) {
+      case 1:
+        res.verb = value;
+        break;
+      case 2:
+        res.path = value;
+        break;
+      case 3:
+        res.body = value;
+        break;
+      case 4:
+        res.id = value;
+        break;
+      case 5:
+        res.headers.push(value);
+        break;
+    }
+  }
+  return res;
+}
+
 console.time('parse');
 for (let i = 0; i < 2e6; i++) {
-  parse(buf, MESSAGE_SPEC);
+  decode(buf);
 }
 console.timeEnd('parse');
 
-console.log(parse(buf, MESSAGE_SPEC));
+console.log(decode(buf));
