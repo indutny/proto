@@ -12,7 +12,6 @@ const buf = Buffer.from(
 );
 
 const MESSAGE_SPEC = [
-  FIELD_HOLE, // 0
   FIELD_STRING, // 1 - verb
   FIELD_STRING, // 2 - path
   FIELD_BYTES, // 3 - body
