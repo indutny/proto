@@ -1,6 +1,5 @@
 import {
   decode,
-  FIELD_HOLE,
   FIELD_STRING,
   FIELD_BYTES,
   FIELD_UINT64,
