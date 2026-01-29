@@ -18,6 +18,8 @@ const MESSAGE_SPEC = [
   FIELD_STRING, // 5 - headers
 ];
 
+const kUnknown = Symbol();
+
 function decodeMessage(buf) {
   const fields = decode(buf, MESSAGE_SPEC);
 
@@ -27,6 +29,7 @@ function decodeMessage(buf) {
     body: null,
     id: null,
     headers: [],
+    [kUnknown]: [],
   };
 
   for (const { field, value } of fields) {
@@ -45,6 +48,9 @@ function decodeMessage(buf) {
         break;
       case 5:
         res.headers.push(value);
+        break;
+      default:
+        res[kUnknown].push(value);
         break;
     }
   }
