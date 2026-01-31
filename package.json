@@ -8,6 +8,7 @@
     "lib": "lib"
   },
   "scripts": {
+    "build": "peggy --format es ./src/grammar.pegjs --output ./lib/parser.mjs",
     "lint": "eslint",
     "format": "prettier . --write",
     "test": "vitest"
@@ -23,6 +24,7 @@
     "@eslint/js": "^9.39.2",
     "eslint": "^9.39.2",
     "globals": "^17.2.0",
+    "peggy": "^5.0.6",
     "prettier": "^3.8.1",
     "vitest": "^4.0.18"
   }
