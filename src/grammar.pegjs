@@ -63,11 +63,11 @@ boolean =
   "true" { return true } /
   "false" { return false}
 string = "\"" value:$[^"]* "\"" { return value }
-identifier
+identifier "identifier"
   = $([a-z]i+[a-z0-9_]i*)
 property = identifier|.., "."|
 
-_
+_ "whitespace"
   = (ws / comment)+
 ws = $[ \t\v\b\r\n]
 comment = line_comment / block_comment
