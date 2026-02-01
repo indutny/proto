@@ -12,7 +12,6 @@ const Envelope$SPEC = [
   2081, 0, 0, 0, 34, 0, 33, 512, 1024, 34, 1024, 129, 1024, 129, 1024, 129, 512,
 ];
 Envelope.decode = (data, start, end) => {
-  const fields = $decode(data, Envelope$SPEC, start, end);
   const res = {
     $unknown: [],
     type: null,
@@ -29,7 +28,7 @@ Envelope.decode = (data, start, end) => {
     story: false,
     report_spam_token: null,
   };
-  for (const { id, value } of fields) {
+  $decode(data, Envelope$SPEC, (id, value) => {
     switch (id) {
       case 1:
         res.type = value;
@@ -74,7 +73,7 @@ Envelope.decode = (data, start, end) => {
         res.$unknown.push(value);
         break;
     }
-  }
+  });
   if (res.content === null) {
     res.content = $EMPTY_BYTES;
   }
