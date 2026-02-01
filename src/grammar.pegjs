@@ -1,3 +1,18 @@
+{
+  // https://protobuf.dev/programming-guides/proto3/#assigning
+  function checkFieldId(id) {
+    if (id < 1) {
+      error('Field id cannot be zero');
+    }
+    if (id >= 19000 && id <= 19999) {
+      error('Reserved field id');
+    }
+    if (id > 0x1fffffff) {
+      error('Field id out of range');
+    }
+  }
+}
+
 start
   = $_? @statement|.., _?| $_?
 
@@ -10,50 +25,61 @@ statement =
 
 syntax =
   "syntax" _ "=" _? value:string _? ";" {
-    return { kind: 'syntax', value };
+    return { kind: 'syntax', value, loc: location() };
   }
 
 package =
   "package" _ name:property _? ";" {
-    return { kind: 'package', name };
+    return { kind: 'package', name, loc: location() };
   }
 option =
   "option" _ name:identifier _? "=" _? value:literal _? ";" {
-    return { kind: 'option', name, value };
+    return { kind: 'option', name, value, loc: location() };
   }
 message =
   "message" _ name:identifier _? "{" _?
     children:(field / reserved / oneof / enum / message / option)|.., _?|
   _? "}" {
-    return { kind: 'message', name, children };
+    return { kind: 'message', name, children, loc: location() };
   }
 field =
   modifier:(@("optional"/"repeated") _)?
-  type:property _ name:identifier _? "=" _? id:number _? options:(@inline_options _?)? ";" {
-    return { kind: "field", modifier, type, name, id, options };
+  type:property _ name:identifier _? "="
+  _? id:number _? options:(@inline_options _?)? ";" {
+    checkFieldId(id);
+    return {
+      kind: 'field',
+      modifier,
+      type,
+      name,
+      id,
+      options,
+      loc: location(),
+    };
   }
 oneof = "oneof" _ name:identifier _? "{" _?
     children:(field / reserved)|.., _?|
   _? "}" {
-    return { kind: 'oneof', children };
+    return { kind: 'oneof', children, loc: location() };
   }
 enum =
   "enum" _ name:identifier _? "{" _?
     children:(enum_value / reserved / option)|.., _?|
   _? "}" {
-    return { kind: 'enum', name, children };
+    return { kind: 'enum', name, children, loc: location() };
   }
 enum_value =
   name:identifier _? "=" _? id:number _? ";" {
-    return { kind: "value", name, id };
+    return { kind: 'value', name, id, loc: location() };
   }
 reserved =
   "reserved" _ id:number _? ";" {
-    return { kind: "reserved", id };
+    checkFieldId(id);
+    return { kind: 'reserved', id, loc: location() };
   }
 inline_options = "[" _?
     @(name: identifier _? "=" _? value:literal {
-      return { name, value }
+      return { name, value, loc: location() }
     })|.., _? "," _?|
   _? "]"
 
@@ -73,3 +99,4 @@ ws = $[ \t\v\b\r\n]
 comment = line_comment / block_comment
 line_comment = "//" [^\n]* "\n"
 block_comment = "/*" (!"*/" .)* "*/"
+

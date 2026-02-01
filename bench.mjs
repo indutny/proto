@@ -1,66 +1,91 @@
-import {
-  decode,
-  FIELD_STRING,
-  FIELD_BYTES,
-  FIELD_UINT64,
-} from './lib/decoder.mjs';
+import { decode as $decode } from './lib/decoder.mjs';
 
 const buf = Buffer.from(
-  '0a03474554120b2f76312f6d6573736167651a0568656c6c6f207b2a0e636f6e74656e742d6c656e6774682a04313032342a0c636f6e74656e742d747970652a0870726f746f627566',
+  '080128b88ce6d0c13338034220719c854cb0d4c755127d35142f6e6f549d94b2d6c8a3526957f27cf0bd7fa2fe4a2435636434383766362d313639302d343236622d613532632d64666166333333306135616650be8ce6d0c1335a2437333465343736352d386364382d343063662d396638382d3666656532633832353532396a2437656535643666382d373935322d346233652d386237312d3163656562366536313130337001',
   'hex'
 );
 
-const MESSAGE_SPEC = [
-  FIELD_STRING, // 1 - verb
-  FIELD_STRING, // 2 - path
-  FIELD_BYTES, // 3 - body
-  FIELD_UINT64, // 4 - id
-  FIELD_STRING, // 5 - headers
+const Envelope = {};
+const Envelope$SPEC = [
+  2081, 0, 0, 0, 34, 0, 33, 512, 1024, 34, 1024, 129, 1024, 129, 1024, 129, 512,
 ];
-
-const kUnknown = Symbol();
-
-function decodeMessage(buf) {
-  const fields = decode(buf, MESSAGE_SPEC);
-
+Envelope.decode = (data, start, end) => {
+  const fields = $decode(data, Envelope$SPEC, start, end);
   const res = {
-    verb: null,
-    path: null,
-    body: null,
-    id: null,
-    headers: [],
-    [kUnknown]: [],
+    $unknown: [],
+    type: null,
+    sourceServiceId: '',
+    sourceDevice: 0,
+    destinationServiceId: '',
+    timestamp: 0n,
+    content: null,
+    serverGuid: '',
+    serverTimestamp: 0n,
+    ephemeral: false,
+    urgent: false,
+    updatedPni: '',
+    story: false,
+    report_spam_token: null,
   };
-
-  for (const { field, value } of fields) {
-    switch (field) {
+  for (const { id, value } of fields) {
+    switch (id) {
       case 1:
-        res.verb = value;
+        res.type = value;
         break;
-      case 2:
-        res.path = value;
+      case 11:
+        res.sourceServiceId = value;
         break;
-      case 3:
-        res.body = value;
+      case 7:
+        res.sourceDevice = value;
         break;
-      case 4:
-        res.id = value;
+      case 13:
+        res.destinationServiceId = value;
         break;
       case 5:
-        res.headers.push(value);
+        res.timestamp = value;
+        break;
+      case 8:
+        res.content = value;
+        break;
+      case 9:
+        res.serverGuid = value;
+        break;
+      case 10:
+        res.serverTimestamp = value;
+        break;
+      case 12:
+        res.ephemeral = value;
+        break;
+      case 14:
+        res.urgent = value;
+        break;
+      case 15:
+        res.updatedPni = value;
+        break;
+      case 16:
+        res.story = value;
+        break;
+      case 17:
+        res.report_spam_token = value;
         break;
       default:
-        res[kUnknown].push(value);
+        res.$unknown.push(value);
         break;
     }
   }
+  if (res.content === null) {
+    res.content = new Uint8Array();
+  }
+  if (res.report_spam_token === null) {
+    res.report_spam_token = new Uint8Array();
+  }
   return res;
-}
+};
 
 console.time('decode');
 for (let i = 0; i < 2e6; i++) {
-  decodeMessage(buf);
+  Envelope.decode(buf);
 }
 console.timeEnd('decode');
 
-console.log(decodeMessage(buf));
+console.log(Envelope.decode(buf));
