@@ -89,10 +89,8 @@ Envelope.decode = (data, start, end) => {
   return res;
 };
 
-console.time('decode');
-for (let i = 0; i < 2e6; i++) {
-  Envelope.decode(buf);
-}
-console.timeEnd('decode');
-
 console.log(Envelope.decode(buf));
+
+export default function decode() {
+  return Envelope.decode(buf).sourceDevice;
+}
