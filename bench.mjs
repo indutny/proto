@@ -68,9 +68,6 @@ Envelope.decode = (data, start, end) => {
       case 17:
         res.report_spam_token = value;
         break;
-      default:
-        res.$unknown.push(value);
-        break;
     }
   }
   if (res.content === null) {
