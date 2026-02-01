@@ -5,6 +5,8 @@ const buf = Buffer.from(
   'hex'
 );
 
+const $EMPTY_BYTES = new Uint8Array(0);
+
 const Envelope = {};
 const Envelope$SPEC = [
   2081, 0, 0, 0, 34, 0, 33, 512, 1024, 34, 1024, 129, 1024, 129, 1024, 129, 512,
@@ -68,13 +70,16 @@ Envelope.decode = (data, start, end) => {
       case 17:
         res.report_spam_token = value;
         break;
+      default:
+        res.$unknown.push(value);
+        break;
     }
   }
   if (res.content === null) {
-    res.content = new Uint8Array();
+    res.content = $EMPTY_BYTES;
   }
   if (res.report_spam_token === null) {
-    res.report_spam_token = new Uint8Array();
+    res.report_spam_token = $EMPTY_BYTES;
   }
   return res;
 };
