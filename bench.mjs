@@ -28,52 +28,58 @@ Envelope.decode = (data, start, end) => {
     story: false,
     report_spam_token: null,
   };
-  $decode(data, Envelope$SPEC, (id, value) => {
-    switch (id) {
-      case 1:
-        res.type = value;
-        break;
-      case 11:
-        res.sourceServiceId = value;
-        break;
-      case 7:
-        res.sourceDevice = value;
-        break;
-      case 13:
-        res.destinationServiceId = value;
-        break;
-      case 5:
-        res.timestamp = value;
-        break;
-      case 8:
-        res.content = value;
-        break;
-      case 9:
-        res.serverGuid = value;
-        break;
-      case 10:
-        res.serverTimestamp = value;
-        break;
-      case 12:
-        res.ephemeral = value;
-        break;
-      case 14:
-        res.urgent = value;
-        break;
-      case 15:
-        res.updatedPni = value;
-        break;
-      case 16:
-        res.story = value;
-        break;
-      case 17:
-        res.report_spam_token = value;
-        break;
-      default:
-        res.$unknown.push(value);
-        break;
-    }
-  });
+  $decode(
+    data,
+    Envelope$SPEC,
+    (id, value) => {
+      switch (id) {
+        case 1:
+          res.type = value;
+          break;
+        case 11:
+          res.sourceServiceId = value;
+          break;
+        case 7:
+          res.sourceDevice = value;
+          break;
+        case 13:
+          res.destinationServiceId = value;
+          break;
+        case 5:
+          res.timestamp = value;
+          break;
+        case 8:
+          res.content = value;
+          break;
+        case 9:
+          res.serverGuid = value;
+          break;
+        case 10:
+          res.serverTimestamp = value;
+          break;
+        case 12:
+          res.ephemeral = value;
+          break;
+        case 14:
+          res.urgent = value;
+          break;
+        case 15:
+          res.updatedPni = value;
+          break;
+        case 16:
+          res.story = value;
+          break;
+        case 17:
+          res.report_spam_token = value;
+          break;
+        default:
+          res.$unknown.push(value);
+          break;
+      }
+    },
+    start,
+    end
+  );
   if (res.content === null) {
     res.content = $EMPTY_BYTES;
   }
