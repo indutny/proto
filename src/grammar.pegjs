@@ -60,7 +60,7 @@ field =
 oneof = "oneof" _ name:identifier _? "{" _?
     children:(field / reserved)|.., _?|
   _? "}" {
-    return { kind: 'oneof', children, loc: location() };
+    return { kind: 'oneof', name, children, loc: location() };
   }
 enum =
   "enum" _ name:identifier _? "{" _?
