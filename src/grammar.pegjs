@@ -14,10 +14,11 @@
 }
 
 start
-  = $_? @statement|.., _?| $_?
+  = _? head:(syntax / statement) _? tail:statement|.., _?| _? {
+    return [head].concat(tail);
+  }
 
 statement =
-  syntax /
   package /
   option /
   message /
@@ -73,7 +74,7 @@ enum_value =
     return { kind: 'value', name, id, loc: location() };
   }
 reserved =
-  "reserved" _ id:number _? ";" {
+  "reserved" _ id:(number / string) _? ";" {
     checkFieldId(id);
     return { kind: 'reserved', id, loc: location() };
   }
@@ -99,4 +100,3 @@ ws = $[ \t\v\b\r\n]
 comment = line_comment / block_comment
 line_comment = "//" [^\n]* "\n"
 block_comment = "/*" (!"*/" .)* "*/"
-
