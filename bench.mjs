@@ -9,8 +9,10 @@ const $EMPTY_BYTES = new Uint8Array(0);
 
 const Envelope = {};
 const Envelope$SPEC = [
-  2081, 0, 0, 0, 34, 0, 33, 512, 1024, 34, 1024, 129, 1024, 129, 1024, 129, 512,
+  4129, 0, 0, 0, 34, 0, 33, 512, 1024, 34, 1024, 129, 1024, 129, 1024, 129, 512,
+  0, 512, 512, 512, 512,
 ];
+
 Envelope.decode = (data, start, end) => {
   const res = {
     $unknown: [],
@@ -93,4 +95,8 @@ console.log(Envelope.decode(buf));
 
 export default function decode() {
   return Envelope.decode(buf).sourceDevice;
+}
+
+for (let i = 0; i < 1e5; i++) {
+  Envelope.decode(buf);
 }
