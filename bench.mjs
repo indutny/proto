@@ -1,4 +1,5 @@
 import { signalservice } from './protos.mjs';
+import { encode } from './lib/index.mjs';
 
 const { Envelope } = signalservice;
 
@@ -19,8 +20,9 @@ const toEncode = {
   serverGuid: '5cd487f6-1690-426b-a52c-dfaf3330a5af',
   serverTimestamp: 1769964406334n,
 };
-console.log(Envelope.encode(toEncode));
+const fields = Envelope.toFields(toEncode);
+console.log(Envelope.encode(toEncode).length);
 
-export default function encode() {
+export default function() {
   return Envelope.encode(toEncode).length;
 }
