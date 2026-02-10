@@ -20,7 +20,6 @@ const toEncode = {
   serverGuid: '5cd487f6-1690-426b-a52c-dfaf3330a5af',
   serverTimestamp: 1769964406334n,
 };
-const fields = Envelope.toFields(toEncode);
 console.log(Envelope.encode(toEncode).length);
 
 export default function () {
