@@ -23,6 +23,6 @@ const toEncode = {
 const fields = Envelope.toFields(toEncode);
 console.log(Envelope.encode(toEncode).length);
 
-export default function() {
+export default function () {
   return Envelope.encode(toEncode).length;
 }
