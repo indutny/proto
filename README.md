@@ -1,6 +1,6 @@
-# @indutny/proto
+# @indutny/protopiler
 
-WIP
+Moved to [Codeberg](https://codeberg.org/indutny/protopiler).
 
 ## LICENSE
 
